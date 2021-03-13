@@ -1,0 +1,23 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.header {
+  color: #000000; /* Цвет заголовка */
+  
+  font-weight: 600; /* Нормальное начертание текста  */
+  text-align: center;
+
+}
+
+.form{
+	margin-left: auto;
+    margin-right: auto;
+    max-width: 450px;
+    background-color: #ffcc00;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+}
