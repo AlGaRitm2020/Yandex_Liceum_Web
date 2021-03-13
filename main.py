@@ -1,31 +1,47 @@
-from flask import Flask, render_template, request
-import os
+from flask import Flask, render_template, request, make_response, session, redirect
+from flask_login import LoginManager, login_user
+from data import db_session
+from data.users import User
+from wtforms import *
+from wtforms.validators import *
+from flask_wtf import FlaskForm
+import datetime
 
-UPLOAD_FOLDER = 'static/img'
+class LoginForm(FlaskForm):
+    # email = EmailField('Почта', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    remember_me = BooleanField('Запомнить меня')
+    submit = SubmitField('Войти')
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
+    days=365
+)
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
-# main
-file_path = 'static/img/robot.png'
-@app.route('/',  methods=['POST', 'GET'])
-# @app.route('/results/<nickname>/<int:level>/<float:rating>')
-def form():
-    global file_path
-    # import index from html
-    if request.method == 'GET':
+login_manager = LoginManager()
+login_manager.init_app(app)
 
-        return render_template('index.html', src=file_path)
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
 
-    elif request.method == "POST":
 
-        f = request.files['file']
-        print(f.filename)
-        file_path = f'{UPLOAD_FOLDER}/{f.filename}'
-        f.save(file_path)
 
-        return render_template('index.html', src=file_path)
-
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html',
+                               message="Неправильный логин или пароль",
+                               form=form)
+    return render_template('login.html', title='Авторизация', form=form)
 
 
 

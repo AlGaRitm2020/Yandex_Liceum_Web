@@ -12,9 +12,20 @@
     <title>{{header}}</title>
   </head>
   <body>
+  <nav class="navbar bg-dark navbar-dark">
+    {% if current_user.is_authenticated %}
+    <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+{% else %}
+    <p>
+        <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+        <a class="btn btn-success" href="/login">Войти</a>
+    </p>
+{% endif %}
+  </nav>
     
   <h1 class='header header-primary'>Миссия Колонизация Марса</h1>
   <h4 class='header'>И на Марсе будут яблони цвести!</h4>
+
   
 
 
