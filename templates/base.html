@@ -12,6 +12,11 @@
     <title>{{header}}</title>
   </head>
   <body>
+  
+    
+  <h1 class='header header-primary'>Социальная сеть </h1>
+  <h4 class='header'>By Yandex.Liceum and AlGaRitm2020</h4>
+
   <nav class="navbar bg-dark navbar-dark">
     {% if current_user.is_authenticated %}
     <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
@@ -22,9 +27,8 @@
     </p>
 {% endif %}
   </nav>
-    
-  <h1 class='header header-primary'>Миссия Колонизация Марса</h1>
-  <h4 class='header'>И на Марсе будут яблони цвести!</h4>
+
+  {% block content %}{% endblock %}
 
   
 
