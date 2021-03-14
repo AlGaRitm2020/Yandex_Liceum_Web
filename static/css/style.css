@@ -7,7 +7,7 @@
 .header {
   color: #000000; /* Цвет заголовка */
   
-  font-weight: 600; /* Нормальное начертание текста  */
+  font-weight: normal; /* Нормальное начертание текста  */
   text-align: center;
 
 }
