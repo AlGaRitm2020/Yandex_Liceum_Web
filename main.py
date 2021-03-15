@@ -27,16 +27,16 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
+    """"Get user with user_id"""
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
 
-# home page
 @app.route("/")
 def index():
+    """"Main page / show all user news and all public news"""
     db_sess = db_session.create_session()
     # news = db_sess.query(News).filter(News.is_private != True)
     if current_user.is_authenticated:
@@ -47,9 +47,10 @@ def index():
     return render_template("index.html", news=news)
 
 
-# register page
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
+    """"Register user with Register Form
+    Fields: name, email, about, password"""
     form = RegisterForm()
     # register button
     if form.validate_on_submit():
@@ -81,9 +82,11 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
-# login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """"Login using email and password
+    Check correctness login and password
+    After that, redirect to home(/) """
     # login form
     form = LoginForm()
 
@@ -105,16 +108,23 @@ def login():
     # return template
     return render_template('login.html', title='Авторизация', form=form)
 
+
 @app.route('/logout')
 @login_required
 def logout():
+    """"Logout page
+    kill current user session and redirect to home(/)"""
     logout_user()
     return redirect("/")
 
-# add news
-@app.route('/news',  methods=['GET', 'POST'])
+
+@app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news():
+    """"Add news( aviable only for users)
+    Create form: title, content, is_private (created date and user id automatically)
+    After submit redirect to home"""
+
     form = NewsForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -129,9 +139,14 @@ def add_news():
     return render_template('news.html', title='Добавление новости',
                            form=form)
 
+
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_news(id):
+    """"Edit an exsisting news( only for the creator of this news)
+    Editing fields: title, content, is_private
+    (Created date does not change)
+    After submit redirect to home"""
     form = NewsForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -161,9 +176,13 @@ def edit_news(id):
                            title='Редактирование новости',
                            form=form
                            )
+
+
 @app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def news_delete(id):
+    """"delete an exsisting news( only for the creator of this news)
+        After submit redirect to home"""
     db_sess = db_session.create_session()
     news = db_sess.query(News).filter(News.id == id,
                                       News.user == current_user
@@ -177,7 +196,7 @@ def news_delete(id):
 
 
 def main():
-    # initilize database
+    """"Initilize database session and run application"""
     db_session.global_init("db/blogs.db")
 
     app.run(port=8080, host='127.0.0.1')
