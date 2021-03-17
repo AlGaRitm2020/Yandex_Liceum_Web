@@ -25,3 +25,16 @@ def get_news():
                  for item in news]
         }
     )
+
+@blueprint.route('/api/news/<int:news_id>', methods=['GET'])
+def get_one_news(news_id):
+    db_sess = db_session.create_session()
+    news = db_sess.query(News).get(news_id)
+    if not news:
+        return jsonify({'error': 'Not found'})
+    return jsonify(
+        {
+            'news': news.to_dict(only=(
+                'title', 'content', 'user_id', 'is_private'))
+        }
+    )
