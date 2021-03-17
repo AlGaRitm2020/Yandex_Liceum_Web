@@ -6,6 +6,7 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from data import db_session
 from data.users import User
 from data.news import News
+from data import  news_api
 
 # forms
 from forms.register_form import RegisterForm
@@ -195,11 +196,13 @@ def news_delete(id):
     return redirect('/')
 
 
-def main():
-    """"Initilize database session and run application"""
-    db_session.global_init("db/blogs.db")
 
-    app.run(port=8080, host='127.0.0.1')
+
+
+def main():
+    db_session.global_init("db/blogs.db")
+    app.register_blueprint(news_api.blueprint)
+    app.run()
 
 
 if __name__ == '__main__':
