@@ -3,7 +3,9 @@
 	padding: 0;
 	box-sizing: border-box;
 }
-
+body{
+  background-color: #1f3f58;
+}
 .header {
   color: #000000; /* Цвет заголовка */
   

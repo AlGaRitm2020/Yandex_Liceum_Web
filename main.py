@@ -1,5 +1,5 @@
 # flask framework
-from flask import Flask, render_template, request, make_response, session, redirect, abort
+from flask import Flask, render_template, request, make_response, session, redirect, abort, jsonify
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
 # models
@@ -28,6 +28,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+from flask import make_response
+
+@app.errorhandler(404)
+def not_found(error):
+    """This page means that user query isn't correct"""
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
 @login_manager.user_loader
 def load_user(user_id):
     """"Get user with user_id"""
@@ -36,8 +43,8 @@ def load_user(user_id):
 
 
 @app.route("/")
-def index():
-    """"Main page / show all user news and all public news"""
+def home_page():
+    """"Home page (/) show all current user news and all public news"""
     db_sess = db_session.create_session()
     # news = db_sess.query(News).filter(News.is_private != True)
     if current_user.is_authenticated:
@@ -49,7 +56,7 @@ def index():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def reqister():
+def reqister_page():
     """"Register user with Register Form
     Fields: name, email, about, password"""
     form = RegisterForm()
@@ -84,7 +91,7 @@ def reqister():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login_page():
     """"Login using email and password
     Check correctness login and password
     After that, redirect to home(/) """
@@ -112,7 +119,7 @@ def login():
 
 @app.route('/logout')
 @login_required
-def logout():
+def logout_page():
     """"Logout page
     kill current user session and redirect to home(/)"""
     logout_user()
@@ -121,7 +128,7 @@ def logout():
 
 @app.route('/news', methods=['GET', 'POST'])
 @login_required
-def add_news():
+def add_news_page():
     """"Add news( aviable only for users)
     Create form: title, content, is_private (created date and user id automatically)
     After submit redirect to home"""
@@ -143,7 +150,7 @@ def add_news():
 
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_news(id):
+def edit_news_page(id):
     """"Edit an exsisting news( only for the creator of this news)
     Editing fields: title, content, is_private
     (Created date does not change)
@@ -181,7 +188,7 @@ def edit_news(id):
 
 @app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def news_delete(id):
+def news_delete_page(id):
     """"delete an exsisting news( only for the creator of this news)
         After submit redirect to home"""
     db_sess = db_session.create_session()

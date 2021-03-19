@@ -1,5 +1,5 @@
 import flask
-from flask import jsonify
+from flask import jsonify, app
 from . import db_session
 from .news import News
 
@@ -13,6 +13,8 @@ blueprint = flask.Blueprint(
 # @blueprint.route('/api/news')
 # def get_news():
 #     return "Обработчик в news_api"
+
+
 
 @blueprint.route('/api/news')
 def get_news():
