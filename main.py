@@ -143,6 +143,7 @@ def add_news_page():
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
+
         return redirect('/')
     return render_template('news.html', title='Добавление новости',
                            form=form)
