@@ -1,9 +1,10 @@
 # flask framework
 from flask import Flask, render_template, request, make_response, session, redirect, abort, jsonify
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+from flask_restful import reqparse, abort, Api, Resource
 
 # models
-from data import db_session
+from data import db_session, news_resources
 from data.users import User
 from data.news import News
 from data import  news_api
@@ -18,6 +19,8 @@ import datetime
 
 # flask init
 app = Flask(__name__)
+api = Api(app)
+
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     days=365
 )
@@ -209,7 +212,14 @@ def news_delete_page(id):
 
 def main():
     db_session.global_init("db/blogs.db")
-    app.register_blueprint(news_api.blueprint)
+    # app.register_blueprint(news_api.blueprint)
+
+    # для списка объектов
+    api.add_resource(news_resources.NewsListResource, '/api/v2/news')
+
+    # для одного объекта
+    api.add_resource(news_resources.NewsResource, '/api/v2/news/<int:news_id>')
+
     app.run()
 
 

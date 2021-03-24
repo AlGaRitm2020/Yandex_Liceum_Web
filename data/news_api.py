@@ -2,6 +2,7 @@ import flask
 from flask import jsonify, request
 from . import db_session
 from .news import News
+from flask_restful import reqparse, abort, Api, Resource
 
 blueprint = flask.Blueprint(
     'news_api',
