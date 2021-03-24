@@ -132,7 +132,7 @@ def logout_page():
 @app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news_page():
-    """"Add news( aviable only for users)
+    """"Add news( available only for users)
     Create form: title, content, is_private (created date and user id automatically)
     After submit redirect to home"""
 
@@ -220,7 +220,7 @@ def main():
     # для одного объекта
     api.add_resource(news_resources.NewsResource, '/api/v2/news/<int:news_id>')
 
-    app.run()
+    app.run(port='8080')
 
 
 if __name__ == '__main__':

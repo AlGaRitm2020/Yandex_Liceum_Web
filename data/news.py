@@ -24,4 +24,4 @@ class News(SqlAlchemyBase, SerializerMixin):
                               secondary="association",
                               backref="news")
 
-    is_published = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    # is_published = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
