@@ -23,3 +23,5 @@ class News(SqlAlchemyBase, SerializerMixin):
     categories = orm.relation("Category",
                               secondary="association",
                               backref="news")
+
+    is_published = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
